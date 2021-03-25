@@ -1,0 +1,74 @@
+<nav class="navbar navbar-expand navbar-light bg-light">
+  <div class="nav navbar-nav">
+    <a
+      class="nav-item nav-link active"
+      href="#"
+    >Todo App</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-md-8 offset-md-2 mt-5">
+      <h3>Create a Todo</h3>
+      <form #todoForm="ngForm">
+        <div class="form-group">
+          <label>Title</label>
+          <!-- Kötelező kitölteni, kisbetűk, nagybetűk, számok, szóköz, legalább 5 karakter. -->
+          <input name="title" [(ngModel)]="selectedTodo.title" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <!-- Kötelező kitölteni, kisbetűk, nagybetűk, számok, szóköz, legalább 25 karakter. -->
+          <textarea name="description" [(ngModel)]="selectedTodo.description" class="form-control">
+            </textarea>
+        </div>
+        <button class="btn btn-primary btn-block mt-2">
+          <i class="fa fa-save"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-md-8 offset-md-2 mt-5">
+      <div class="row">
+        <div class="col-6">
+          <h3>Todo List</h3>
+        </div>
+        <div class="col-2">
+          <button class="btn btn-secondary">
+            <i class="fa fa-sort-alpha-asc"></i>
+          </button>
+        </div>
+        <div class="col-4">
+          <input type="text" class="form-control" placeholder="search...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-md-8 offset-md-2">
+      <div class="list-group mb-4">
+        <div
+          *ngFor="let todo of todos$ | async"
+          [class.active]="todo.active"
+          class="list-group-item list-group-item-action d-flex"
+          aria-current="true"
+        >
+          <div class="content p-2 align-self-center">
+            {{ todo.title }}: {{ todo.description | slice:0:65 }}...
+          </div>
+          <div class="btn-group ml-auto p-2">
+            <button class="btn btn-info">
+              <i class="fa fa-check"></i>
+            </button>
+            <button class="btn btn-danger">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
