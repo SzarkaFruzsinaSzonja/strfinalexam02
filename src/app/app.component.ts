@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Todo } from './model/todo';
 import { TodoService } from './service/todo.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -14,25 +15,31 @@ export class AppComponent {
 
   selectedTodo: Todo = new Todo();
 
-  // filter
+  // filter 
   filterPhrase: string = '';
-  filterKey: string = 'title';
 
   // sorter
-  sortby: string = 'id';
+  sortBy: string = 'id';
+
+  // delete
+  selectedTodoToDelete: Todo = new Todo();
+
+  // regex
+  validRegex = /^[a-zA-Z0-9\s]*$/;
+
+
 
   constructor(
     private todoService: TodoService,
+    
   ) {}
-  ngOnInit(): void {
-  }
 
-  setToDelete(id: Todo): void {
-    this.selectedTodo = id;
+  setToDelete(todo: Todo): void {
+    this.selectedTodoToDelete = todo;
   }
 
   deleteItem(): void {
-    this.todoService.remove(this.selectedTodo).subscribe(
+    this.todoService.remove(this.selectedTodoToDelete).subscribe(
       () => {
         this.todos$ = this.todoService.getAll();
       }
@@ -40,10 +47,30 @@ export class AppComponent {
   }
 
   sortData(param: string): void {
-    this.sortby = param;
-    let tableHeaders = document.querySelectorAll('th');
-    tableHeaders.forEach( item => item.classList.remove('active'));
-    document.querySelector('#'+param)?.classList.add('active');
+    this.sortBy = param;
   }
+
+  switchActive(todo: Todo): void {
+    try {
+      todo.active === false ? todo.active = true : todo.active = false;
+      this.todoService.update(todo).subscribe(
+        () => this.todos$ = this.todoService.getAll()
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  onFormSubmit(todo: Todo): void {
+
+    try {
+      this.todoService.create(todo).subscribe(
+        () => this.todos$ = this.todoService.getAll()
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
 }
