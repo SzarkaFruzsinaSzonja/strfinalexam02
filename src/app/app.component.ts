@@ -14,7 +14,36 @@ export class AppComponent {
 
   selectedTodo: Todo = new Todo();
 
+  // filter
+  filterPhrase: string = '';
+  filterKey: string = 'title';
+
+  // sorter
+  sortby: string = 'id';
+
   constructor(
     private todoService: TodoService,
   ) {}
+  ngOnInit(): void {
+  }
+
+  setToDelete(id: Todo): void {
+    this.selectedTodo = id;
+  }
+
+  deleteItem(): void {
+    this.todoService.remove(this.selectedTodo).subscribe(
+      () => {
+        this.todos$ = this.todoService.getAll();
+      }
+    );
+  }
+
+  sortData(param: string): void {
+    this.sortby = param;
+    let tableHeaders = document.querySelectorAll('th');
+    tableHeaders.forEach( item => item.classList.remove('active'));
+    document.querySelector('#'+param)?.classList.add('active');
+  }
+
 }
